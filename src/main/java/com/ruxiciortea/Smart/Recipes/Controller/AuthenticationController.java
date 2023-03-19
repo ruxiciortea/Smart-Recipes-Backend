@@ -1,8 +1,8 @@
 package com.ruxiciortea.Smart.Recipes.Controller;
 
-import com.ruxiciortea.Smart.Recipes.Model.RequestsResponses.AuthenticationRequest;
-import com.ruxiciortea.Smart.Recipes.Model.RequestsResponses.AuthenticationResponse;
-import com.ruxiciortea.Smart.Recipes.Model.RequestsResponses.RegisterRequest;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.User.UserAuthenticationDTO;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.TokenDTO;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.User.UserRegistrationDTO;
 import com.ruxiciortea.Smart.Recipes.Service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,12 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
+    public ResponseEntity<TokenDTO> register(@RequestBody @Valid UserRegistrationDTO request) {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
+    public ResponseEntity<TokenDTO> authenticate(@RequestBody @Valid UserAuthenticationDTO request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 

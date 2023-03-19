@@ -1,4 +1,4 @@
-package com.ruxiciortea.Smart.Recipes.Model.RequestsResponses;
+package com.ruxiciortea.Smart.Recipes.Util.DTO.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class UserAuthenticationDTO {
 
     @Email
     private String email;

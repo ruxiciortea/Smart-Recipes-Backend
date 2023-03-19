@@ -2,9 +2,9 @@ package com.ruxiciortea.Smart.Recipes.Service;
 
 import com.ruxiciortea.Smart.Recipes.Config.JwtService;
 import com.ruxiciortea.Smart.Recipes.Model.*;
-import com.ruxiciortea.Smart.Recipes.Model.RequestsResponses.AuthenticationRequest;
-import com.ruxiciortea.Smart.Recipes.Model.RequestsResponses.AuthenticationResponse;
-import com.ruxiciortea.Smart.Recipes.Model.RequestsResponses.RegisterRequest;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.User.UserAuthenticationDTO;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.TokenDTO;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.User.UserRegistrationDTO;
 import com.ruxiciortea.Smart.Recipes.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +21,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public TokenDTO register(UserRegistrationDTO request) {
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -32,10 +32,10 @@ public class AuthenticationService {
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
 
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return TokenDTO.builder().token(jwtToken).build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public TokenDTO authenticate(UserAuthenticationDTO request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -45,7 +45,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return TokenDTO.builder().token(jwtToken).build();
     }
 
 }

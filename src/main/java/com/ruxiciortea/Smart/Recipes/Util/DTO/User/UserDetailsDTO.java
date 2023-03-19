@@ -1,4 +1,4 @@
-package com.ruxiciortea.Smart.Recipes.Util.DTO;
+package com.ruxiciortea.Smart.Recipes.Util.DTO.User;
 
 import com.ruxiciortea.Smart.Recipes.Model.Role;
 import jakarta.persistence.EnumType;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserDetailsDTO {
 
     @NotBlank
     private String firstname;

@@ -1,4 +1,4 @@
-package com.ruxiciortea.Smart.Recipes.Model.RequestsResponses;
+package com.ruxiciortea.Smart.Recipes.Util.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class TokenDTO {
 
     private String token;
 
