@@ -21,10 +21,10 @@ public class UserService {
 
     public UserDetailsDTO getUser(String auth) throws Exception {
         String userEmail = jwtService.extractUsername(auth);
-        Optional<User> user =  userRepository.findByEmail(userEmail);
+        Optional<User> databaseUser =  userRepository.findByEmail(userEmail);
 
-        if (user.isPresent()) {
-            return modelMapper.map(user.get(), UserDetailsDTO.class);
+        if (databaseUser.isPresent()) {
+            return modelMapper.map(databaseUser.get(), UserDetailsDTO.class);
         }
 
         throw new UsernameNotFoundException("Could not find user in database.");
@@ -43,5 +43,17 @@ public class UserService {
         }
 
         throw new UsernameNotFoundException("Could not find user in database.");
+    }
+
+    public boolean deleteUser(String auth) {
+        String userEmail = jwtService.extractUsername(auth);
+        Optional<User> databaseUser =  userRepository.findByEmail(userEmail);
+
+        if (databaseUser.isPresent()) {
+            userRepository.delete(databaseUser.get());
+            return true;
+        }
+
+        return false;
     }
 }
