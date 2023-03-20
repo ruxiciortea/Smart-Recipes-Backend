@@ -1,6 +1,7 @@
 package com.ruxiciortea.Smart.Recipes.Config;
 
 import com.ruxiciortea.Smart.Recipes.Repository.UserRepository;
+import com.ruxiciortea.Smart.Recipes.Util.ReportsGenerator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +48,11 @@ public class ApplicationConfig {
     @Bean
     public ModelMapper createModelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public ReportsGenerator reportsGenerator() {
+        return new ReportsGenerator();
     }
 
 }

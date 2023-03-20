@@ -6,6 +6,7 @@ import com.ruxiciortea.Smart.Recipes.Util.DTO.User.UserAuthenticationDTO;
 import com.ruxiciortea.Smart.Recipes.Util.DTO.TokenDTO;
 import com.ruxiciortea.Smart.Recipes.Util.DTO.User.UserRegistrationDTO;
 import com.ruxiciortea.Smart.Recipes.Repository.UserRepository;
+import com.ruxiciortea.Smart.Recipes.Util.ReportsGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final ReportsGenerator reportsGenerator;
 
     public TokenDTO register(UserRegistrationDTO request) {
         var user = User.builder()
@@ -31,6 +33,7 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
+        reportsGenerator.generateNewUserReport(user);
 
         return TokenDTO.builder().token(jwtToken).build();
     }

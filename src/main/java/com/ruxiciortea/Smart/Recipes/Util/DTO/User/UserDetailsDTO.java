@@ -1,8 +1,6 @@
 package com.ruxiciortea.Smart.Recipes.Util.DTO.User;
 
 import com.ruxiciortea.Smart.Recipes.Model.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
