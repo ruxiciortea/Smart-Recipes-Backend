@@ -20,9 +20,11 @@ public class Recipe {
     @GeneratedValue
     private Integer id;
 
-    private String Title;
+    private String title;
 
     private String author;
+
+    private String authorEmail;
 
     private float rating;
 

@@ -1,11 +1,7 @@
 package com.ruxiciortea.Smart.Recipes.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
+import lombok.*;
 
 @Data
 @Builder
@@ -22,4 +18,7 @@ public class Ingredient {
     @Column(unique = true)
     private String name;
 
+    public Ingredient(String name) {
+        this.name = name;
+    }
 }

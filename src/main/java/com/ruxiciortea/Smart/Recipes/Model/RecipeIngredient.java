@@ -18,12 +18,11 @@ public class RecipeIngredient {
     @GeneratedValue
     private Integer id;
 
-    @OneToOne
-    private Ingredient ingredientName;
+    private String ingredientName;
 
     private int quantity;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private MeasuringUnit measuringUnit;
 
 }

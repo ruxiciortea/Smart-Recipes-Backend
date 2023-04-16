@@ -1,6 +1,8 @@
 package com.ruxiciortea.Smart.Recipes.Service;
 
 import com.opencsv.CSVReader;
+import com.ruxiciortea.Smart.Recipes.Model.Ingredient;
+import com.ruxiciortea.Smart.Recipes.Repository.IngredientsRepository;
 import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.IngredientDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class IngredientService {
+
+    private final IngredientsRepository ingredientsRepository;
 
     public List<IngredientDTO> importIngredientsFromCSV() {
         List<String[]> ingredientNames = new ArrayList<>();
@@ -28,6 +32,8 @@ public class IngredientService {
         for (String[] ingredientName: ingredientNames) {
             String name = ingredientName[0];
             ingredientDTOs.add(new IngredientDTO(name));
+
+            ingredientsRepository.save(new Ingredient(name));
         }
 
         return ingredientDTOs;
