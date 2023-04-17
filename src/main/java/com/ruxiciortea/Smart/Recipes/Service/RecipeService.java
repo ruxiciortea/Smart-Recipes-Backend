@@ -154,6 +154,19 @@ public class RecipeService {
         throw new UsernameNotFoundException("");
     }
 
+    public List<IngredientUsageDTO> getMostUsedIngredientsChard(String auth) throws Exception {
+        String userEmail = jwtService.extractUsername(auth.substring(7));
+        Optional<User> databaseUser = userRepository.findByEmail(userEmail);
+
+        if (databaseUser.isPresent()) {
+            List<Recipe> allRecipes = getAllRecipesFromDB();
+
+            return getIngredientUsageData(allRecipes);
+        }
+
+        throw new UsernameNotFoundException("");
+    }
+
     private List<RecipeIngredient> getIngredientList(List<RecipeIngredientDTO> ingredients) {
         List<RecipeIngredient> ingredientList = new ArrayList<>();
 
@@ -183,6 +196,40 @@ public class RecipeService {
         }
 
         return recipeDTOs;
+    }
+
+    private List<IngredientUsageDTO> getIngredientUsageData(List<Recipe> recipes) {
+        List<IngredientUsageDTO> ingredientUsage = new ArrayList<>();
+
+        for (Recipe recipe: recipes) {
+            for (RecipeIngredient ingredient: recipe.getIngredients()) {
+                if (containsIngredient(ingredientUsage, ingredient.getIngredientName())) {
+                    countIngredient(ingredientUsage, ingredient.getIngredientName());
+                } else {
+                    ingredientUsage.add(new IngredientUsageDTO(ingredient.getIngredientName(), 1));
+                }
+            }
+        }
+
+        return ingredientUsage;
+    }
+
+    private boolean containsIngredient(List<IngredientUsageDTO> ingredientUsageDTOs, String ingredientName) {
+        for (IngredientUsageDTO ingredientUsage: ingredientUsageDTOs) {
+            if (ingredientUsage.getIngredientName().equals(ingredientName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void countIngredient(List<IngredientUsageDTO> ingredientUsageDTOs, String ingredientName) {
+        for (IngredientUsageDTO ingredientUsage: ingredientUsageDTOs) {
+            if (ingredientUsage.getIngredientName().equals(ingredientName)) {
+                ingredientUsage.setNumberUses(ingredientUsage.getNumberUses() + 1);
+            }
+        }
     }
 
 }

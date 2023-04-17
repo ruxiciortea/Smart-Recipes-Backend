@@ -1,10 +1,7 @@
 package com.ruxiciortea.Smart.Recipes.Controller;
 
 import com.ruxiciortea.Smart.Recipes.Service.RecipeService;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.IngredientDTO;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeDTO;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIdDTO;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIdentifiedDTO;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +48,11 @@ public class RecipeController {
     public ResponseEntity<Boolean> delete(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
                                          @RequestBody RecipeIdDTO recipe) throws Exception {
         return ResponseEntity.ok(recipeService.deleteRecipe(recipe, auth));
+    }
+
+    @GetMapping("/chart_data")
+    public ResponseEntity<List<IngredientUsageDTO>> getChartData(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth) throws Exception {
+        return ResponseEntity.ok(recipeService.getMostUsedIngredientsChard(auth));
     }
 
 }
