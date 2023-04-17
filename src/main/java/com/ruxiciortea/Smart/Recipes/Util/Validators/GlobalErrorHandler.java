@@ -2,6 +2,7 @@ package com.ruxiciortea.Smart.Recipes.Util.Validators;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -52,6 +53,12 @@ public class GlobalErrorHandler {
     @ResponseBody
     public ResponseEntity<String> onUsernameNotFoundException(UsernameNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find user.");
+    }
+
+    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<String> onUsernameNotFoundException(ChangeSetPersister.NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find requested item.");
     }
 
 }

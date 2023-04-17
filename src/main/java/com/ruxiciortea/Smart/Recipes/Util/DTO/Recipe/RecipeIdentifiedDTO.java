@@ -1,19 +1,20 @@
 package com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe;
 
-import com.ruxiciortea.Smart.Recipes.Model.MeasuringUnit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipeIngredientDTO {
+public class RecipeIdentifiedDTO {
 
-    private String ingredientName;
+    private Integer id;
 
-    private int quantity;
+    private String title;
 
-    private MeasuringUnit measuringUnit;
+    private List<RecipeIngredientDTO> ingredients;
 
 }
