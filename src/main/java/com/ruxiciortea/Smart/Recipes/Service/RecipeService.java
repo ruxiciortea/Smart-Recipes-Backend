@@ -1,17 +1,11 @@
 package com.ruxiciortea.Smart.Recipes.Service;
 
 import com.ruxiciortea.Smart.Recipes.Config.JwtService;
-import com.ruxiciortea.Smart.Recipes.Model.Recipe;
-import com.ruxiciortea.Smart.Recipes.Model.RecipeIngredient;
-import com.ruxiciortea.Smart.Recipes.Model.Role;
-import com.ruxiciortea.Smart.Recipes.Model.User;
+import com.ruxiciortea.Smart.Recipes.Model.*;
 import com.ruxiciortea.Smart.Recipes.Repository.RecipeIngredientRepository;
 import com.ruxiciortea.Smart.Recipes.Repository.RecipeRepository;
 import com.ruxiciortea.Smart.Recipes.Repository.UserRepository;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeDTO;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIdDTO;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIngredientDTO;
-import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIdentifiedDTO;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -132,6 +126,29 @@ public class RecipeService {
             }
 
             return usersRecipes;
+        }
+
+        throw new UsernameNotFoundException("");
+    }
+
+    public List<RecipeIdentifiedDTO> getRecipesWithIngredient(IngredientDTO ingredient, String auth) throws Exception {
+        String userEmail = jwtService.extractUsername(auth.substring(7));
+        Optional<User> databaseUser = userRepository.findByEmail(userEmail);
+
+        if (databaseUser.isPresent()) {
+            List<Recipe> allRecipes = getAllRecipesFromDB();
+            List<RecipeIdentifiedDTO> ingredientRecipes = new ArrayList<>();
+
+            for (Recipe recipe: allRecipes) {
+                for (RecipeIngredient recipeIngredient: recipe.getIngredients()) {
+                    if (recipeIngredient.getIngredientName().equals(ingredient.getName())) {
+                        RecipeIdentifiedDTO recipeDTO = modelMapper.map(recipe, RecipeIdentifiedDTO.class);
+                        ingredientRecipes.add(recipeDTO);
+                    }
+                }
+            }
+
+            return ingredientRecipes;
         }
 
         throw new UsernameNotFoundException("");

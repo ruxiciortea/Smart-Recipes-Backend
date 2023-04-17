@@ -1,6 +1,7 @@
 package com.ruxiciortea.Smart.Recipes.Controller;
 
 import com.ruxiciortea.Smart.Recipes.Service.RecipeService;
+import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.IngredientDTO;
 import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeDTO;
 import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIdDTO;
 import com.ruxiciortea.Smart.Recipes.Util.DTO.Recipe.RecipeIdentifiedDTO;
@@ -18,15 +19,13 @@ public class RecipeController {
 
     private final RecipeService recipeService;
 
-    @PostMapping()
-    @CrossOrigin
+    @PostMapping("/add")
     public ResponseEntity<String> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
                                               @RequestBody RecipeDTO recipe) throws Exception {
         return ResponseEntity.ok(recipeService.addRecipe(recipe, auth));
     }
 
     @PostMapping("/update")
-    @CrossOrigin
     public ResponseEntity<String> update(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
                                          @RequestBody RecipeIdentifiedDTO recipe) throws Exception {
         return ResponseEntity.ok(recipeService.updateRecipe(recipe, auth));
@@ -42,8 +41,13 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getUsersRecipes(auth));
     }
 
+    @GetMapping("/ingredient")
+    public ResponseEntity<List<RecipeIdentifiedDTO>> getWithIngredient(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
+                                                                       @RequestBody IngredientDTO ingredient) throws Exception {
+        return ResponseEntity.ok(recipeService.getRecipesWithIngredient(ingredient, auth));
+    }
+
     @DeleteMapping("/delete")
-    @CrossOrigin
     public ResponseEntity<Boolean> delete(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
                                          @RequestBody RecipeIdDTO recipe) throws Exception {
         return ResponseEntity.ok(recipeService.deleteRecipe(recipe, auth));
