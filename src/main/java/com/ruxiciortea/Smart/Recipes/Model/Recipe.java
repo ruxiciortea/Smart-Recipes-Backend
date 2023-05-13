@@ -29,9 +29,9 @@ public class Recipe {
 
     private String instructionsText;
 
-    @ElementCollection
+    @OneToMany
     @Builder.Default
-    private List<Integer> ratings = new ArrayList<>();
+    private List<Rating> ratings = new ArrayList<>();
 
     @OneToMany
     @Builder.Default
@@ -40,7 +40,7 @@ public class Recipe {
     @OneToMany
     private List<RecipeIngredient> ingredients;
 
-    public void addRating(int rating) {
+    public void addRating(Rating rating) {
         ratings.add(rating);
     }
 
