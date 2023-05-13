@@ -1,11 +1,7 @@
 package com.ruxiciortea.Smart.Recipes.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +29,7 @@ public class User implements UserDetails {
 
     private String lastname;
 
+    @Column(unique = true)
     private String email;
 
     private String password;

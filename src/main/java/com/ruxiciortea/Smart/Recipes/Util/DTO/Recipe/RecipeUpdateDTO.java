@@ -9,9 +9,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipeDTO {
+public class RecipeUpdateDTO {
+
+    private Integer id;
 
     private String title;
+
+    private String instructionsText;
 
     private List<RecipeIngredientDTO> ingredients;
 

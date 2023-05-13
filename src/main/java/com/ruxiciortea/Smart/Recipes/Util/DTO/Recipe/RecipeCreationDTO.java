@@ -9,11 +9,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipeIdentifiedDTO {
-
-    private Integer id;
+public class RecipeCreationDTO {
 
     private String title;
+
+    private String instructionsText;
 
     private List<RecipeIngredientDTO> ingredients;
 

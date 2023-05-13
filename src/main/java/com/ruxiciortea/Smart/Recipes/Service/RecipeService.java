@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,21 +28,19 @@ public class RecipeService {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
 
-    public String addRecipe(RecipeDTO recipe, String auth) throws Exception {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+    public String addRecipe(RecipeCreationDTO recipe, String auth) throws Exception {
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
 
         if (databaseUser.isPresent()) {
             User user = databaseUser.get();
 
-            List<RecipeIngredient> ingredients = getIngredientList(recipe.getIngredients());
-
             Recipe completeRecipe = Recipe.builder()
                     .title(recipe.getTitle())
                     .author(user.getFirstname() + " " + user.getLastname())
                     .authorEmail(user.getEmail())
-                    .rating(0.0f)
-                    .ingredients(ingredients)
+                    .instructionsText(recipe.getInstructionsText())
+                    .ingredients(getIngredientList(recipe.getIngredients()))
                     .build();
 
             recipeRepository.save(completeRecipe);
@@ -51,8 +50,8 @@ public class RecipeService {
         throw new UsernameNotFoundException("Could not find user in database.");
     }
 
-    public String updateRecipe(RecipeIdentifiedDTO recipe, String auth) throws Exception {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+    public String updateRecipe(RecipeUpdateDTO recipe, String auth) throws Exception {
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
         Optional<Recipe> databaseRecipe = recipeRepository.findById(recipe.getId());
 
@@ -67,6 +66,7 @@ public class RecipeService {
             recipeRepository.delete(oldRecipe);
 
             oldRecipe.setTitle(recipe.getTitle());
+            oldRecipe.setInstructionsText(recipe.getInstructionsText());
             oldRecipe.setIngredients(getIngredientList(recipe.getIngredients()));
 
             recipeRepository.save(oldRecipe);
@@ -78,7 +78,7 @@ public class RecipeService {
     }
 
     public boolean deleteRecipe(RecipeIdDTO recipe, String auth) throws Exception {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
         Optional<Recipe> databaseRecipe = recipeRepository.findById(recipe.getId());
 
@@ -98,8 +98,8 @@ public class RecipeService {
         throw new ChangeSetPersister.NotFoundException();
     }
 
-    public List<RecipeIdentifiedDTO> getAllRecipes(String auth) {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+    public List<RecipeRetrievalDTO> getAllRecipes(String auth) {
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
 
         if (databaseUser.isPresent()) {
@@ -110,17 +110,17 @@ public class RecipeService {
         throw new UsernameNotFoundException("");
     }
 
-    public List<RecipeIdentifiedDTO> getUsersRecipes(String auth) {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+    public List<RecipeRetrievalDTO> getUsersRecipes(String auth) {
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
 
         if (databaseUser.isPresent()) {
             List<Recipe> allRecipes = getAllRecipesFromDB();
-            List<RecipeIdentifiedDTO> usersRecipes = new ArrayList<>();
+            List<RecipeRetrievalDTO> usersRecipes = new ArrayList<>();
 
             for (Recipe recipe: allRecipes) {
                 if (recipe.getAuthorEmail().equals(userEmail)) {
-                    RecipeIdentifiedDTO recipeDTO = modelMapper.map(recipe, RecipeIdentifiedDTO.class);
+                    RecipeRetrievalDTO recipeDTO = modelMapper.map(recipe, RecipeRetrievalDTO.class);
                     usersRecipes.add(recipeDTO);
                 }
             }
@@ -131,18 +131,18 @@ public class RecipeService {
         throw new UsernameNotFoundException("");
     }
 
-    public List<RecipeIdentifiedDTO> getRecipesWithIngredient(IngredientDTO ingredient, String auth) throws Exception {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+    public List<RecipeRetrievalDTO> getRecipesWithIngredient(IngredientDTO ingredient, String auth) throws Exception {
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
 
         if (databaseUser.isPresent()) {
             List<Recipe> allRecipes = getAllRecipesFromDB();
-            List<RecipeIdentifiedDTO> ingredientRecipes = new ArrayList<>();
+            List<RecipeRetrievalDTO> ingredientRecipes = new ArrayList<>();
 
             for (Recipe recipe: allRecipes) {
                 for (RecipeIngredient recipeIngredient: recipe.getIngredients()) {
                     if (recipeIngredient.getIngredientName().equals(ingredient.getName())) {
-                        RecipeIdentifiedDTO recipeDTO = modelMapper.map(recipe, RecipeIdentifiedDTO.class);
+                        RecipeRetrievalDTO recipeDTO = modelMapper.map(recipe, RecipeRetrievalDTO.class);
                         ingredientRecipes.add(recipeDTO);
                     }
                 }
@@ -155,7 +155,7 @@ public class RecipeService {
     }
 
     public List<IngredientUsageDTO> getMostUsedIngredientsChard(String auth) throws Exception {
-        String userEmail = jwtService.extractUsername(auth.substring(7));
+        String userEmail = jwtService.extractUsername(auth);
         Optional<User> databaseUser = userRepository.findByEmail(userEmail);
 
         if (databaseUser.isPresent()) {
@@ -187,11 +187,11 @@ public class RecipeService {
         return recipeRepository.findAll();
     }
 
-    private List<RecipeIdentifiedDTO> getRecipesDTO(List<Recipe> recipes) {
-        List<RecipeIdentifiedDTO> recipeDTOs = new ArrayList<>();
+    private List<RecipeRetrievalDTO> getRecipesDTO(List<Recipe> recipes) {
+        List<RecipeRetrievalDTO> recipeDTOs = new ArrayList<>();
 
         for (Recipe recipe: recipes) {
-            RecipeIdentifiedDTO recipeDTO = modelMapper.map(recipe, RecipeIdentifiedDTO.class);
+            RecipeRetrievalDTO recipeDTO = modelMapper.map(recipe, RecipeRetrievalDTO.class);
             recipeDTOs.add(recipeDTO);
         }
 
